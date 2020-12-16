@@ -1,9 +1,9 @@
-import { Request, ResponseToolkit, ResponseObject } from '@hapi/hapi'
-
+import { Request, ResponseObject, ResponseToolkit } from '@hapi/hapi'
+import axios from 'axios'
 import CasoDetectado from '../models/CasoDetectado'
 import ResumenDia from '../models/ResumenDia'
 
-import axios from 'axios'
+
 
 export const summary = async (req: Request, h: ResponseToolkit):
     Promise<ResponseObject> => {
@@ -35,7 +35,7 @@ export const summary = async (req: Request, h: ResponseToolkit):
 
         let fecha = summary_days[summary_days.length - 1].fecha
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'summary',
             {
@@ -95,7 +95,7 @@ export const evolution = async (req: Request, h: ResponseToolkit):
             activos_acc[i] = activos_acc[i - 1] + activos[i]
         }
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'evolution',
             {
@@ -152,7 +152,7 @@ export const evolution_recuperados = async (req: Request, h: ResponseToolkit):
             activos_acc[i] = activos_acc[i - 1] + activos[i]
         }
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'evolution_recuperados',
             {
@@ -209,7 +209,7 @@ export const evolution_fallecidos = async (req: Request, h: ResponseToolkit):
             activos_acc[i] = activos_acc[i - 1] + activos[i]
         }
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'evolution_fallecidos',
             {
@@ -242,7 +242,7 @@ export const sexo = async (req: Request, h: ResponseToolkit):
         let hombres = await CasoDetectado.find({ sexo: "hombre" }).count()
         let desconocido = (await CasoDetectado.find().count()) - hombres - mujeres
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'sexo',
             {
@@ -282,7 +282,7 @@ export const modo = async (req: Request, h: ResponseToolkit):
             }
         })
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'modo',
             modos,
@@ -320,7 +320,7 @@ export const casos_extranjeros = async (req: Request, h: ResponseToolkit):
             }
         })
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'pais',
             paises,
@@ -343,7 +343,7 @@ export const nacionalidad = async (req: Request, h: ResponseToolkit):
         let cubanos = await CasoDetectado.find({ pais: "cu" }).count()
         let extranjeros = (await CasoDetectado.find().count()) - cubanos
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'nacionalidad',
             {
@@ -388,7 +388,7 @@ export const edad = async (req: Request, h: ResponseToolkit):
             }
         })
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'edad',
             edades,
@@ -435,7 +435,7 @@ export const tests = async (req: Request, h: ResponseToolkit):
             proporcion[i - 12] = Number(((detectados[i - 12] / tests[i - 12]) * 100).toFixed(2))
         }
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'tests',
             {
@@ -470,7 +470,7 @@ export const provincias = async (req: Request, h: ResponseToolkit):
             (provincias as any)[c.provincia_detección] = t + 1
         })
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'provincias',
             provincias,
@@ -496,16 +496,16 @@ export const municipios = async (req: Request, h: ResponseToolkit):
         let municipios = {}
 
         casos.forEach((c) => {
-            let label = c.municipio_detección + 
-            ' (' + 
-                c.provincia_detección.replace(/[^A-Z]/g, '') 
-            + ')'
+            let label = c.municipio_detección +
+                ' (' +
+                c.provincia_detección.replace(/[^A-Z]/g, '')
+                + ')'
 
             let t = (municipios as any)[label] || 0;
             (municipios as any)[label] = t + 1
         })
 
-        let graph_api = process.env.GRAPH_API || 'http://127.0.0.1:5000/'
+        let graph_api = (process.env.GRAPH_API || 'http://127.0.0.1:5000') + '/'
 
         let gresponse = await axios.post(graph_api + 'municipios',
             municipios,
