@@ -1,1 +1,1 @@
-web: npm buildrun
+web: npm run buildrun
